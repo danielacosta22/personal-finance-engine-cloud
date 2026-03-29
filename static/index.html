@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Finanzas Personales by Daniel Acosta</title>
+    <!-- PWA Setup -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0A0A0A">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    
+    <!-- iOS Support -->
+    <link rel="apple-touch-icon" href="/icon.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Finanzas Personales">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="top-nav">
+            <h1 class="brand">Finanzas Personales <span class="brand-sub">by Daniel Acosta</span></h1>
+            <div id="daniel-factor-marquee">
+                <span id="daniel-factor-text">Cargando diagnóstico...</span>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main id="main-content">
+            <!-- DASHBOARD SECTION -->
+            <section id="section-dashboard" class="page-section active">
+                <div class="metrics-grid">
+                    <div class="metric-card balance-card">
+                        <h3>Balance Neto</h3>
+                        <div class="value" id="val-balance">$-.--</div>
+                    </div>
+                    <div class="metric-card ingreso-card">
+                        <h3>Ingresos</h3>
+                        <div class="value" id="val-ingresos">$-.--</div>
+                    </div>
+                    <div class="metric-card gasto-card">
+                        <h3>Gastos</h3>
+                        <div class="value" id="val-gastos">$-.--</div>
+                    </div>
+                </div>
+
+                <div class="glass-panel mt-4">
+                    <h3>Visualizador Dinámico de Metas</h3>
+                    <div id="metas-container" class="metas-list">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <div class="glass-panel mt-4 charts-container">
+                    <h3>Telemetría de Egresos</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="expensesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FLUJOS SECTION -->
+            <section id="section-flujos" class="page-section">
+                <div class="glass-panel">
+                    <h2>Registrar Flujo de Efectivo</h2>
+                    <form id="form-transaccion" class="modern-form">
+                        <div class="form-group">
+                            <label>Tipo de Operación</label>
+                            <div class="toggle-group">
+                                <input type="radio" id="t-gasto" name="tipo" value="Gasto" checked>
+                                <label for="t-gasto" class="btn-toggle">Gasto</label>
+                                <input type="radio" id="t-ingreso" name="tipo" value="Ingreso">
+                                <label for="t-ingreso" class="btn-toggle">Ingreso</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="monto">Monto Numérico ($)</label>
+                            <input type="number" id="monto" step="0.01" min="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoría Clasificatoria</label>
+                            <select id="categoria" required></select>
+                        </div>
+                        <div class="form-group" id="group-meta">
+                            <label for="form-meta-id">Asociar a Meta (Inyección / Gasto)</label>
+                            <select id="form-meta-id">
+                                <option value="">-- Ninguna --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Descripción (Log)</label>
+                            <input type="text" id="descripcion" placeholder="Opcional">
+                        </div>
+                        <button type="submit" class="btn-primary">Registrar Transacción</button>
+                    </form>
+                </div>
+                
+                <div class="glass-panel mt-4">
+                    <h3>Historial de Transacciones</h3>
+                    <div class="table-responsive">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Categoría</th>
+                                    <th>Monto</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txns-tbody">
+                                <!-- Llenado por JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- METAS SECTION -->
+            <section id="section-metas" class="page-section">
+                <div class="glass-panel">
+                    <h2>Inicializar Nueva Meta</h2>
+                    <form id="form-meta" class="modern-form">
+                        <div class="form-group">
+                            <label for="meta-nombre">Nombre de la Meta</label>
+                            <input type="text" id="meta-nombre" required placeholder="Ej. Computadora Cuántica">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label for="meta-icono">Icono (Emoji)</label>
+                                <input type="text" id="meta-icono" value="🚀" required maxlength="2">
+                            </div>
+                            <div class="form-group half">
+                                <label for="meta-monto">Monto Objetivo ($)</label>
+                                <input type="number" id="meta-monto" step="1" min="1" required placeholder="1000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meta-fecha">Fecha Límite</label>
+                            <input type="date" id="meta-fecha" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Lanzar Meta</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- GASTOS FIJOS SECTION -->
+            <section id="section-fijos" class="page-section">
+                <div class="glass-panel">
+                    <h2>Gestor de Gastos Fijos</h2>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 15px;">
+                        Estos gastos se descontarán automáticamente cada vez que registres un ingreso de categoría "Nómina".
+                    </p>
+                    <form id="form-gasto-fijo" class="modern-form">
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label for="gf-nombre">Nombre (Ej. Internet)</label>
+                                <input type="text" id="gf-nombre" required>
+                            </div>
+                            <div class="form-group half">
+                                <label for="gf-monto">Monto Quincenal ($)</label>
+                                <input type="number" id="gf-monto" step="0.01" min="0.01" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Añadir Gasto Fijo</button>
+                    </form>
+                </div>
+                
+                <div class="glass-panel mt-4">
+                    <h3>Lista de Gastos Fijos</h3>
+                    <div class="table-responsive">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Gasto</th>
+                                    <th>Monto</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fijos-tbody">
+                                <!-- Llenado por JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- BOTTOM NAV FOR MOBILE -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-target="section-dashboard">
+                <span class="icon">📊</span>
+                <span>Control</span>
+            </button>
+            <button class="nav-item" data-target="section-flujos">
+                <span class="icon">💸</span>
+                <span>Flujos</span>
+            </button>
+            <button class="nav-item" data-target="section-metas">
+                <span class="icon">🧪</span>
+                <span>Metas</span>
+            </button>
+            <button class="nav-item" data-target="section-fijos">
+                <span class="icon">⚙️</span>
+                <span>Fijos</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast">Notificación</div>
+
+    <script src="/app.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(
+            (registration) => { console.log('ServiceWorker registrado. Ámbito:', registration.scope); },
+            (err) => { console.log('Registro del ServiceWorker falló:', err); }
+          );
+        });
+      }
+    </script>
+</body>
+</html>

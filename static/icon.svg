@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <rect width="512" height="512" rx="120" fill="#0B0F19"/>
+
+    <!-- Background Glow Effect -->
+    <circle cx="256" cy="256" r="180" fill="#10B981" opacity="0.1" filter="blur(40px)"/>
+    <circle cx="256" cy="256" r="120" fill="#06B6D4" opacity="0.15" filter="blur(40px)"/>
+
+    <!-- Stack of Coins -->
+    <!-- Bottom Coin -->
+    <path d="M146 360 v40 a110 40 0 0 0 220 0 v-40 z" fill="#0369A1"/>
+    <ellipse cx="256" cy="360" rx="110" ry="40" fill="#06B6D4"/>
+
+    <!-- Middle Coin -->
+    <path d="M146 290 v40 a110 40 0 0 0 220 0 v-40 z" fill="#047857"/>
+    <ellipse cx="256" cy="290" rx="110" ry="40" fill="#10B981"/>
+
+    <!-- Top Coin -->
+    <path d="M146 220 v40 a110 40 0 0 0 220 0 v-40 z" fill="#065F46"/>
+    <ellipse cx="256" cy="220" rx="110" ry="40" fill="#34D399"/>
+    
+    <!-- Dollar Sign Inside Top Coin -->
+    <g transform="translate(256, 220) scale(1, 0.5)">
+        <circle cx="0" cy="0" r="70" fill="none" stroke="#0B0F19" stroke-width="8" opacity="0.3"/>
+        <text x="0" y="24" font-family="'Inter', 'Segoe UI', sans-serif" font-weight="800" font-size="72" fill="#0B0F19" text-anchor="middle" opacity="0.8">$</text>
+    </g>
+
+    <!-- Flow Arrows / Neon Gradients -->
+    <!-- Left up arrow connecting -->
+    <path d="M 80 430 C 50 300 90 200 150 110" fill="none" stroke="#10B981" stroke-width="20" stroke-linecap="round"/>
+    <path d="M 110 110 L 150 110 L 150 150" fill="none" stroke="#10B981" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Right arrow wrapping the coins -->
+    <path d="M 432 110 C 462 240 422 340 362 430" fill="none" stroke="#06B6D4" stroke-width="20" stroke-linecap="round"/>
+    <path d="M 402 430 L 362 430 L 362 390" fill="none" stroke="#06B6D4" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
